@@ -16,6 +16,18 @@ class Graph:
         if not self.graph.has_edge(source, target):
             self.graph.add_edge(source, target, label=label)
 
+    def add_note_to_node(self, url, note):
+        if url in self.graph.nodes:
+            self.graph.nodes[url]['note'] = note
+
+    def add_endpoints_to_node(self, url, endpoints):
+        if url in self.graph.nodes:
+            if 'endpoints' not in self.graph.nodes[url]:
+                self.graph.nodes[url]['endpoints'] = []
+            for endpoint in endpoints:
+                if endpoint not in self.graph.nodes[url]['endpoints']:
+                    self.graph.nodes[url]['endpoints'].append(endpoint)
+
     def get_visualization(self):
         net = Network(notebook=True, directed=True)
         net.from_nx(self.graph)
