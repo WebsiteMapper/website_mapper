@@ -6,11 +6,23 @@ import tempfile
 import os
 
 class Mapper:
+"""
+Core class handling the website mapping functionality.
+    
+This class manages the process of crawling websites, building
+the site map, and updating the visualization.
+"""
     def __init__(self, browser):
         self.browser = browser
         self.graph = Graph()
 
     def start_mapping(self):
+    """
+    Begin the mapping process for the current URL.
+        
+    Validates the URL, initializes the graph, and starts
+    the page loading process.
+    """
         url = self.browser.url().toString()
         if not url.startswith(('http://', 'https://')):
             QMessageBox.warning(None, "Invalid URL", "Please enter a valid URL starting with http:// or https://")
