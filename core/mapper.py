@@ -45,6 +45,14 @@ the site map, and updating the visualization.
         """, self.process_page_data)
 
     def process_page_data(self, data):
+    """
+    Process the data extracted from a loaded web page.
+        
+    Adds nodes and edges to the graph based on the links
+    found on the page.
+        
+    :param data: Dictionary containing page title and links
+    """
         current_url = self.browser.url().toString()
         self.graph.add_node(current_url, data['title'])
         for link in data['links']:
