@@ -1,6 +1,9 @@
 from PyQt6.QtCore import QUrl
-from PyQt6.QtWidgets import QInputDialog
+from PyQt6.QtWidgets import QInputDialog, QMessageBox
 from core.graph import Graph
+from pyvis.network import Network
+import tempfile
+import os
 
 class Mapper:
     def __init__(self, browser):
@@ -9,11 +12,17 @@ class Mapper:
 
     def start_mapping(self):
         url = self.browser.url().toString()
-        if url:
+        if not url.startswith(('http://', 'https://')):
+            QMessageBox.warning(None, "Invalid URL", "Please enter a valid URL starting with http:// or https://")
+            return
+        
+        try:
             self.browser.setUrl(QUrl(url))
             self.browser.loadFinished.connect(self.page_loaded)
             self.graph.clear()
             self.graph.add_node(url, "Start Page")
+        except Exception as e:
+            QMessageBox.critical(None, "Error", f"An error occurred while starting the mapping: {str(e)}")
 
     def page_loaded(self):
         current_url = self.browser.url().toString()
@@ -31,12 +40,20 @@ class Mapper:
         self.update_map()
 
     def update_map(self):
-        # This method should update the visual representation of the map
-        # The actual implementation will depend on how you want to display the map
-        pass
+        net = self.graph.get_visualization()
+        
+        # Create a temporary file to save the HTML
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmp_file:
+            net.save_graph(tmp_file.name)
+            
+        # Load the temporary file in the browser view
+        self.browser.setUrl(QUrl.fromLocalFile(tmp_file.name))
+        
+        # Schedule the temporary file for deletion after it's loaded
+        self.browser.loadFinished.connect(lambda: os.unlink(tmp_file.name))
 
     def add_note(self, url):
-        note, ok = QInputDialog.getText(self, "Add Note", "Enter note for " + url)
+        note, ok = QInputDialog.getText(None, "Add Note", f"Enter note for {url}")
         if ok and note:
             self.graph.add_note_to_node(url, note)
             self.update_map()
