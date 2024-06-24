@@ -53,7 +53,3 @@ Website Mapper is a desktop application that allows users to create visual maps 
 ## Contributing
 
 Contributions to Website Mapper are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
