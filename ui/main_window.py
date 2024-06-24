@@ -6,12 +6,6 @@ from ui.controls import setup_controls
 from utils.export_import import export_map, import_map
 
 class WebsiteMapper(QMainWindow):
-    """
-    Main window class for the Website Mapper application.
-    
-    This class sets up the user interface and connects the various
-    components of the application.
-    """
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Website Mapper")
@@ -59,16 +53,19 @@ class WebsiteMapper(QMainWindow):
         self.map_layout.addLayout(button_layout)
 
     def add_note(self):
+        """
+        Add a note to the current page in the map.
+        """
         current_url = self.browser.url().toString()
         self.mapper.add_note(current_url)
 
     def export_map(self):
-    """
-    Export the current map to a JSON file.
+        """
+        Export the current map to a JSON file.
         
-    Opens a file dialog for the user to choose the save location,
-    then exports the map data to the chosen file.
-    """
+        Opens a file dialog for the user to choose the save location,
+        then exports the map data to the chosen file.
+        """
         file_name, _ = QFileDialog.getSaveFileName(self, "Export Map", "", "JSON Files (*.json)")
         if file_name:
             try:
@@ -78,12 +75,12 @@ class WebsiteMapper(QMainWindow):
                 QMessageBox.critical(self, "Error", f"An error occurred while exporting the map: {str(e)}")
 
     def import_map(self):
-    """
-    Import a previously exported map from a JSON file.
+        """
+        Import a previously exported map from a JSON file.
         
-    Opens a file dialog for the user to choose the file to import,
-    then loads the map data and updates the display.
-    """
+        Opens a file dialog for the user to choose the file to import,
+        then loads the map data and updates the display.
+        """
         file_name, _ = QFileDialog.getOpenFileName(self, "Import Map", "", "JSON Files (*.json)")
         if file_name:
             try:
